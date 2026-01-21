@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G.A.N. FREEDOM - Структура сайта</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.4;
+            font-size: 11px;
+        }
+
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 15mm;
+            page-break-after: always;
+        }
+
+        .page:last-child { page-break-after: avoid; }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e3a5f;
+            --success: #059669;
+        }
+
+        /* Cover */
+        .cover { text-align: center; padding-top: 40px; }
+        .logo { width: 100px; height: 100px; margin: 0 auto 15px; }
+        .logo img { width: 100%; height: 100%; object-fit: contain; }
+        .brand-name { font-size: 28px; font-weight: 700; color: var(--primary-dark); letter-spacing: 2px; margin-bottom: 5px; }
+        .cover h1 { font-size: 22px; color: #64748b; font-weight: 400; margin-bottom: 40px; }
+
+        .intro-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: left;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        .intro-box h3 { color: var(--primary-dark); margin-bottom: 12px; font-size: 15px; }
+        .intro-box p { color: #334155; font-size: 12px; margin-bottom: 8px; }
+        .legend { display: flex; gap: 25px; justify-content: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #bfdbfe; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+
+        /* Page header */
+        .page-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; }
+        .page-header-left { display: flex; align-items: center; gap: 10px; }
+        .page-logo { width: 35px; height: 35px; }
+        .page-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .page-title { font-size: 18px; font-weight: 700; color: var(--primary-dark); }
+        .page-number { font-size: 10px; color: #94a3b8; }
+
+        /* Section */
+        .section { margin-bottom: 15px; }
+        .section-title { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px; padding-left: 8px; border-left: 3px solid var(--primary); }
+
+        /* Placeholder */
+        .placeholder { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px dashed #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+        .placeholder-media { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-color: #6ee7b7; min-height: 60px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .placeholder-label { font-size: 10px; font-weight: 500; color: #64748b; }
+        .placeholder-media .placeholder-label { color: var(--success); }
+        .media-icon { font-size: 20px; margin-bottom: 4px; opacity: 0.6; }
+
+        .q { display: inline-block; background: var(--primary); color: white; font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 8px; margin-top: 3px; }
+        .q-media { background: var(--success); }
+
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; }
+        .col-2 { flex: 2; }
+
+        /* Browser */
+        .browser { border: 2px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+        .browser-bar { background: #f1f5f9; padding: 6px 10px; display: flex; align-items: center; gap: 5px; border-bottom: 1px solid #e2e8f0; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot.red { background: #fca5a5; }
+        .dot.yellow { background: #fcd34d; }
+        .dot.green { background: #86efac; }
+        .browser-url { background: white; border-radius: 4px; padding: 3px 8px; font-size: 9px; color: #64748b; margin-left: 8px; flex: 1; }
+        .browser-content { padding: 12px; background: white; }
+
+        /* Nav */
+        .nav { background: var(--primary-dark); padding: 8px 12px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .nav-logo { display: flex; align-items: center; gap: 8px; }
+        .nav-logo img { width: 25px; height: 25px; }
+        .nav-logo span { color: white; font-weight: 600; font-size: 11px; letter-spacing: 1px; }
+        .nav-links { display: flex; gap: 12px; }
+        .nav-link { color: rgba(255,255,255,0.7); font-size: 9px; }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 8px; padding: 15px; margin-bottom: 12px; text-align: center; }
+        .cta-btn { display: inline-block; background: var(--primary); color: white; padding: 6px 15px; border-radius: 15px; font-size: 10px; font-weight: 600; margin-top: 8px; }
+
+        /* Cards */
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; margin-bottom: 10px; }
+        .card-header { background: #f8fafc; padding: 8px 10px; border-bottom: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; color: #475569; }
+        .card-body { padding: 10px; }
+
+        /* Story */
+        .story { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 12px; border-radius: 6px 0 0 6px; margin-bottom: 10px; }
+        .story h4 { color: #92400e; font-size: 11px; margin-bottom: 6px; }
+        .quote { font-style: italic; color: #92400e; font-size: 10px; }
+
+        /* Donation */
+        .donation-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 6px; padding: 12px; text-align: center; margin-bottom: 8px; }
+        .donation-amount { font-size: 18px; font-weight: 700; color: var(--success); }
+
+        /* Contact */
+        .contact-item { background: #f8fafc; border-radius: 5px; padding: 8px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .contact-icon { width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; }
+
+        /* Values */
+        .values-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        .value-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 8px 4px; text-align: center; font-size: 9px; }
+
+        /* Footer */
+        .footer { background: var(--primary-dark); color: white; padding: 12px; border-radius: 6px; margin-top: 12px; }
+        .footer-logo { display: flex; align-items: center; gap: 8px; }
+        .footer-logo img { width: 30px; height: 30px; filter: brightness(0) invert(1); opacity: 0.8; }
+        .footer-logo span { font-weight: 600; font-size: 12px; opacity: 0.9; }
+
+        .note { font-size: 9px; color: #94a3b8; font-style: italic; text-align: center; margin: 8px 0; }
+
+        @media print { body { background: white; } .page { box-shadow: none; } }
+    </style>
+</head>
+<body>
+
+<!-- Обложка -->
+<div class="page">
+    <div class="cover">
+        <div class="logo">
+            <img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt="G.A.N. FREEDOM Logo">
+        </div>
+        <div class="brand-name">G.A.N. FREEDOM</div>
+        <h1>Структура сайта - Визуальное руководство</h1>
+
+        <div class="intro-box">
+            <h3>Как пользоваться этим руководством?</h3>
+            <p><strong>1.</strong> Откройте это руководство рядом с анкетой</p>
+            <p><strong>2.</strong> Каждая пунктирная рамка содержит номер (например: 2.1, 3.1.5)</p>
+            <p><strong>3.</strong> Номер указывает на соответствующий вопрос в анкете</p>
+            <p><strong>4.</strong> Так вы увидите, где именно появится каждый ответ на сайте</p>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="q">X.X</span>
+                    <span>Вопрос о тексте</span>
+                </div>
+                <div class="legend-item">
+                    <span class="q q-media">X.X</span>
+                    <span>Вопрос о фото/видео</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Настройки -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть А: Общая информация и брендинг</div>
+        </div>
+        <div class="page-number">Настройки</div>
+    </div>
+
+    <p class="note" style="text-align: left; margin-bottom: 12px;">Эта информация влияет на общий дизайн сайта и все маркетинговые материалы</p>
+
+    <div class="row">
+        <div class="col">
+            <div class="section-title">Цвета</div>
+            <div class="row">
+                <div class="col">
+                    <div class="placeholder" style="text-align: center; padding: 15px;">
+                        <div style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 6px;"></div>
+                        <div class="placeholder-label">Основной цвет</div>
+                        <span class="q">1.1</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="placeholder" style="text-align: center; padding: 15px;">
+                        <div style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 6px;"></div>
+                        <div class="placeholder-label">Доп. цвет</div>
+                        <span class="q">1.2</span>
+                    </div>
+                </div>
+            </div>
+            <div class="placeholder">
+                <div class="placeholder-label">Другие цвета</div>
+                <span class="q">1.3</span>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="section-title">Идентичность</div>
+            <div class="placeholder">
+                <div class="placeholder-label">Атмосфера сайта</div>
+                <span class="q">1.4</span>
+            </div>
+            <div class="placeholder" style="text-align: center; padding: 15px;">
+                <div class="placeholder-label" style="font-size: 12px;">Амута одним словом</div>
+                <div style="font-size: 20px; color: #cbd5e1; margin: 8px 0;">___________</div>
+                <span class="q">1.5</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="col">
+            <div class="section-title">Целевая аудитория</div>
+            <div class="placeholder"><div class="placeholder-label">Основная ЦА</div><span class="q">1.6</span></div>
+            <div class="placeholder"><div class="placeholder-label">Вторичные ЦА</div><span class="q">1.7</span></div>
+            <div class="placeholder"><div class="placeholder-label">Основной канал связи</div><span class="q">1.8</span></div>
+        </div>
+        <div class="col">
+            <div class="section-title">Ограничения</div>
+            <div class="placeholder"><div class="placeholder-label">Что нельзя на сайте</div><span class="q">1.9</span></div>
+            <div class="placeholder"><div class="placeholder-label">Ограничения на фото</div><span class="q">1.10</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Главная -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть Б: Главная страница</div>
+        </div>
+        <div class="page-number">Страница 1 из 5</div>
+    </div>
+
+    <div class="browser">
+        <div class="browser-bar">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="browser-url">www.gan-freedom.org.il</div>
+        </div>
+        <div class="browser-content">
+            <div class="nav">
+                <div class="nav-logo">
+                    <img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt="">
+                    <span>G.A.N. FREEDOM</span>
+                </div>
+                <div class="nav-links">
+                    <span class="nav-link">Главная</span>
+                    <span class="nav-link">Деятельность</span>
+                    <span class="nav-link">Истории</span>
+                    <span class="nav-link">Пожертвования</span>
+                    <span class="nav-link">Контакты</span>
+                </div>
+            </div>
+
+            <div class="hero">
+                <div class="placeholder placeholder-media" style="margin-bottom: 10px; min-height: 70px;">
+                    <div class="media-icon">🖼️</div>
+                    <div class="placeholder-label">Главное фото/видео</div>
+                    <span class="q q-media">2.2</span>
+                </div>
+                <div class="placeholder" style="background: rgba(255,255,255,0.7);">
+                    <div class="placeholder-label">Главное вступительное предложение</div>
+                    <p style="color: #94a3b8; font-size: 9px;">«Мы амута, которая ___ через ___ для того, чтобы ___»</p>
+                    <span class="q">2.1</span>
+                </div>
+                <div class="cta-btn">Пожертвовать →</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Кому мы помогаем</div>
+                <div class="row">
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Группа 1</div><span class="q">2.3</span></div></div>
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Группа 2</div><span class="q">2.4</span></div></div>
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Группа 3</div><span class="q">2.5</span></div></div>
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Группа 4</div><span class="q">2.6</span></div></div>
+                </div>
+            </div>
+
+            <div class="placeholder" style="text-align: center; padding: 12px;">
+                <div class="placeholder-label">Что для нас важнее всего</div>
+                <span class="q">2.7</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Главная продолжение -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть Б: Главная (продолжение)</div>
+        </div>
+        <div class="page-number">Страница 1 из 5</div>
+    </div>
+
+    <div class="browser">
+        <div class="browser-bar">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="browser-url">www.gan-freedom.org.il</div>
+        </div>
+        <div class="browser-content">
+            <div class="section">
+                <div class="section-title">История основания</div>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="placeholder"><div class="placeholder-label">Что мы увидели</div><span class="q">2.8</span></div>
+                        <div class="placeholder"><div class="placeholder-label">Момент решения</div><span class="q">2.9</span></div>
+                        <div class="placeholder"><div class="placeholder-label">Что начали делать</div><span class="q">2.10</span></div>
+                    </div>
+                    <div class="col">
+                        <div class="placeholder placeholder-media" style="height: 100%; min-height: 110px;">
+                            <div class="media-icon">📷</div>
+                            <div class="placeholder-label">Фото истории</div>
+                            <span class="q q-media">2.11</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Наши ценности</div>
+                <div class="values-grid">
+                    <div class="value-card"><div class="placeholder-label">Ценность 1</div><span class="q">2.12</span></div>
+                    <div class="value-card"><div class="placeholder-label">Ценность 2</div><span class="q">2.13</span></div>
+                    <div class="value-card"><div class="placeholder-label">Ценность 3</div><span class="q">2.14</span></div>
+                    <div class="value-card"><div class="placeholder-label">Ценность 4</div><span class="q">2.15</span></div>
+                    <div class="value-card"><div class="placeholder-label">Ценность 5</div><span class="q">2.16</span></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Наше видение</div>
+                <div class="placeholder" style="text-align: center; padding: 12px;">
+                    <div class="placeholder-label">«Через три года люди будут говорить о нас...»</div>
+                    <span class="q">2.17</span>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="row" style="align-items: center;">
+                    <div class="col">
+                        <div class="footer-logo">
+                            <img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt="">
+                            <span>G.A.N. FREEDOM</span>
+                        </div>
+                    </div>
+                    <div class="col" style="text-align: right;"><p style="font-size: 9px; opacity: 0.7;">© G.A.N. FREEDOM</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Деятельность -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть Г: Что мы делаем</div>
+        </div>
+        <div class="page-number">Страница 2 из 5</div>
+    </div>
+
+    <div class="browser">
+        <div class="browser-bar">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="browser-url">www.gan-freedom.org.il/what-we-do</div>
+        </div>
+        <div class="browser-content">
+            <div class="card">
+                <div class="card-header">Деятельность 1 <span class="q">3.1.1</span></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="placeholder" style="min-height: 22px;"><div class="placeholder-label">Для кого?</div><span class="q">3.1.2</span></div>
+                            <div class="placeholder" style="min-height: 22px;"><div class="placeholder-label">Что происходит?</div><span class="q">3.1.3</span></div>
+                            <div class="placeholder" style="min-height: 22px;"><div class="placeholder-label">Что меняется?</div><span class="q">3.1.4</span></div>
+                        </div>
+                        <div class="col">
+                            <div class="placeholder placeholder-media" style="height: 100%; min-height: 75px;">
+                                <div class="media-icon">📷</div>
+                                <span class="q q-media">3.1.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Деятельность 2 <span class="q">3.2.1</span></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="placeholder" style="min-height: 22px;"><div class="placeholder-label">Для кого?</div><span class="q">3.2.2</span></div>
+                            <div class="placeholder" style="min-height: 22px;"><div class="placeholder-label">Что происходит?</div><span class="q">3.2.3</span></div>
+                            <div class="placeholder" style="min-height: 22px;"><div class="placeholder-label">Что меняется?</div><span class="q">3.2.4</span></div>
+                        </div>
+                        <div class="col">
+                            <div class="placeholder placeholder-media" style="height: 100%; min-height: 75px;">
+                                <div class="media-icon">📷</div>
+                                <span class="q q-media">3.2.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="note">(Можно добавить до 6 деятельностей - вопросы 3.3-3.6)</p>
+
+            <div class="section">
+                <div class="section-title">Наши цифры</div>
+                <div class="row">
+                    <div class="col">
+                        <div class="donation-card">
+                            <div class="donation-amount">XXX</div>
+                            <div class="placeholder-label">Солдат/семей</div>
+                            <span class="q">3.9</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="donation-card">
+                            <div class="donation-amount">XXX</div>
+                            <div class="placeholder-label">Мероприятий в год</div>
+                            <span class="q">3.10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Где мы работаем</div>
+                <div class="row">
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Города/регионы</div><span class="q">3.7</span></div></div>
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Базы/больницы</div><span class="q">3.8</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Истории -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть Д: Истории и влияние</div>
+        </div>
+        <div class="page-number">Страница 3 из 5</div>
+    </div>
+
+    <div class="browser">
+        <div class="browser-bar">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="browser-url">www.gan-freedom.org.il/stories</div>
+        </div>
+        <div class="browser-content">
+            <div class="placeholder" style="text-align: center; padding: 12px; margin-bottom: 12px;">
+                <div class="placeholder-label">Что больше всего трогает нас</div>
+                <span class="q">4.0</span>
+            </div>
+
+            <div class="story">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>История 1: <span class="q">4.1.1</span></h4>
+                        <div class="placeholder" style="background: rgba(255,255,255,0.5); min-height: 20px;"><div class="placeholder-label">Ситуация в начале?</div><span class="q">4.1.2</span></div>
+                        <div class="placeholder" style="background: rgba(255,255,255,0.5); min-height: 20px;"><div class="placeholder-label">Что сделали?</div><span class="q">4.1.3</span></div>
+                        <div class="placeholder" style="background: rgba(255,255,255,0.5); min-height: 20px;"><div class="placeholder-label">Что изменилось?</div><span class="q">4.1.4</span></div>
+                        <div class="quote">«Цитата...» <span class="q">4.1.5</span></div>
+                    </div>
+                    <div class="col">
+                        <div class="placeholder placeholder-media" style="height: 100%; min-height: 100px; background: rgba(255,255,255,0.5);">
+                            <div class="media-icon">📷</div>
+                            <span class="q q-media">4.1.6</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story">
+                <div class="row">
+                    <div class="col-2">
+                        <h4>История 2: <span class="q">4.2.1</span></h4>
+                        <div class="placeholder" style="background: rgba(255,255,255,0.5); min-height: 20px;"><div class="placeholder-label">Ситуация в начале?</div><span class="q">4.2.2</span></div>
+                        <div class="placeholder" style="background: rgba(255,255,255,0.5); min-height: 20px;"><div class="placeholder-label">Что сделали?</div><span class="q">4.2.3</span></div>
+                        <div class="placeholder" style="background: rgba(255,255,255,0.5); min-height: 20px;"><div class="placeholder-label">Что изменилось?</div><span class="q">4.2.4</span></div>
+                        <div class="quote">«Цитата...» <span class="q">4.2.5</span></div>
+                    </div>
+                    <div class="col">
+                        <div class="placeholder placeholder-media" style="height: 100%; min-height: 100px; background: rgba(255,255,255,0.5);">
+                            <div class="media-icon">📷</div>
+                            <span class="q q-media">4.2.6</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="note">(Можно добавить до 4 историй - вопросы 4.3-4.4)</p>
+
+            <div class="placeholder" style="text-align: center; padding: 12px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #fcd34d;">
+                <div class="placeholder-label">«Если бы один солдат сказал нам одну фразу...»</div>
+                <span class="q">4.5</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Пожертвования -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть Е: Пожертвования</div>
+        </div>
+        <div class="page-number">Страница 4 из 5</div>
+    </div>
+
+    <div class="browser">
+        <div class="browser-bar">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="browser-url">www.gan-freedom.org.il/donate</div>
+        </div>
+        <div class="browser-content">
+            <div class="placeholder placeholder-media" style="min-height: 70px; margin-bottom: 12px;">
+                <div class="media-icon">🖼️</div>
+                <div class="placeholder-label">Трогательное фото</div>
+                <span class="q q-media">5.11</span>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Цели на год</div>
+                <div class="row">
+                    <div class="col"><div class="placeholder" style="text-align: center;"><div class="placeholder-label">Цель 1</div><span class="q">5.1</span></div></div>
+                    <div class="col"><div class="placeholder" style="text-align: center;"><div class="placeholder-label">Цель 2</div><span class="q">5.2</span></div></div>
+                    <div class="col"><div class="placeholder" style="text-align: center;"><div class="placeholder-label">Цель 3</div><span class="q">5.3</span></div></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Пожертвование в действии</div>
+                <div class="row">
+                    <div class="col"><div class="donation-card"><div class="donation-amount">₪ ___</div><div class="placeholder-label">Позволяет:</div><span class="q">5.4</span></div></div>
+                    <div class="col"><div class="donation-card"><div class="donation-amount">₪ ___</div><div class="placeholder-label">Позволяет:</div><span class="q">5.5</span></div></div>
+                </div>
+                <div class="row">
+                    <div class="col"><div class="donation-card"><div class="donation-amount">₪ ___</div><div class="placeholder-label">Позволяет:</div><span class="q">5.6</span></div></div>
+                    <div class="col"><div class="donation-card"><div class="donation-amount">₪ ___</div><div class="placeholder-label">Позволяет:</div><span class="q">5.7</span></div></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Как пожертвовать?</div>
+                <div class="row">
+                    <div class="col"><div class="placeholder" style="text-align: center; padding: 12px;"><div style="font-size: 20px; margin-bottom: 4px;">📱</div><div class="placeholder-label" style="font-weight: 600;">Через Bit</div><span class="q">5.8</span></div></div>
+                    <div class="col"><div class="placeholder" style="text-align: center; padding: 12px;"><div style="font-size: 20px; margin-bottom: 4px;">🏦</div><div class="placeholder-label" style="font-weight: 600;">Банковский перевод</div><span class="q">5.9</span></div></div>
+                </div>
+            </div>
+
+            <div class="placeholder" style="text-align: center; padding: 12px; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-color: #6ee7b7;">
+                <div style="font-size: 18px; margin-bottom: 4px;">💚</div>
+                <div class="placeholder-label">«Благодаря тебе...»</div>
+                <span class="q">5.10</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Контакты -->
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-logo"><img src="file:///C:/Users/sarie/gan/לוגו/לוגו.jpg" alt=""></div>
+            <div class="page-title">Часть В: Связь</div>
+        </div>
+        <div class="page-number">Страница 5 из 5</div>
+    </div>
+
+    <div class="browser">
+        <div class="browser-bar">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="browser-url">www.gan-freedom.org.il/contact</div>
+        </div>
+        <div class="browser-content">
+            <div class="section">
+                <div class="section-title">Свяжитесь с нами</div>
+                <div class="row">
+                    <div class="col">
+                        <div class="placeholder placeholder-media" style="min-height: 80px;">
+                            <div class="media-icon">👤</div>
+                            <div class="placeholder-label">Фото команды</div>
+                            <span class="q q-media">6.15</span>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="placeholder"><div class="placeholder-label">Имя контактного лица</div><span class="q">6.1</span></div>
+                        <div class="placeholder"><div class="placeholder-label">Должность</div><span class="q">6.2</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Контактные данные</div>
+                <div class="row">
+                    <div class="col">
+                        <div class="contact-item"><div class="contact-icon">📱</div><div><div class="placeholder-label">Телефон</div><span class="q">6.3</span></div></div>
+                        <div class="contact-item"><div class="contact-icon">💬</div><div><div class="placeholder-label">WhatsApp</div><span class="q">6.4</span></div></div>
+                        <div class="contact-item"><div class="contact-icon">📧</div><div><div class="placeholder-label">Email</div><span class="q">6.5</span></div></div>
+                    </div>
+                    <div class="col">
+                        <div class="contact-item"><div class="contact-icon">📘</div><div><div class="placeholder-label">Facebook</div><span class="q">6.6</span></div></div>
+                        <div class="contact-item"><div class="contact-icon">📸</div><div><div class="placeholder-label">Instagram</div><span class="q">6.7</span></div></div>
+                        <div class="contact-item"><div class="contact-icon">➕</div><div><div class="placeholder-label">Другое</div><span class="q">6.8</span></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Что после обращения?</div>
+                <div class="placeholder"><div class="placeholder-label">Описание процесса</div><span class="q">6.9</span></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Солдаты и семьи</div>
+                <div class="row">
+                    <div class="col-2"><div class="placeholder"><div class="placeholder-label">Объяснение для обращений</div><span class="q">6.10</span></div></div>
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Контакт для солдат</div><span class="q">6.11</span></div></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Волонтёры</div>
+                <div class="row">
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">Открыты?</div><span class="q">6.12</span></div></div>
+                    <div class="col"><div class="placeholder"><div class="placeholder-label">В каких областях?</div><span class="q">6.13</span></div></div>
+                </div>
+                <div class="placeholder"><div class="placeholder-label">Как обратиться</div><span class="q">6.14</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
