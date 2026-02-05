@@ -1,0 +1,60 @@
+﻿# Secrets - NEVER push
+.env
+.env.*
+credentials/
+*.key
+*.pem
+secrets/
+.secrets/
+
+# Dependencies
+node_modules/
+
+# Media (too large for GitHub)
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.wav
+*.mp3
+*.flac
+*.aac
+*.ogg
+*.wma
+
+# Large images
+*.psd
+*.ai
+*.sketch
+
+# Build artifacts
+dist/
+build/
+.next/
+out/
+.nuxt/
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Temp
+*.tmp
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Backup config (meta - don't push)
+.backup-config.json
+
+# Windows reserved filenames
+nul
+
+# Large files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar
+*.gz
