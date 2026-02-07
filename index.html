@@ -4,1471 +4,1874 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G.A.N. FREEDOM - למען החייל</title>
+    <meta name="description" content="עמותת G.A.N. FREEDOM - סיוע לחיילים פצועים ובודדים. דירות, פינוקים ותמיכה מתמשכת.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+        /* ============================
+           CSS VARIABLES & FOUNDATION
+           ============================ */
+        :root {
+            --color-primary: #1a3a6e;
+            --color-primary-light: #2563eb;
+            --color-primary-bright: #3b82f6;
+            --color-accent: #e8a838;
+            --color-accent-warm: #d4922a;
+            --color-success: #10b981;
+            --color-success-dark: #059669;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --color-text-muted: #94a3b8;
+            --color-bg: #fafbfd;
+            --color-surface: #ffffff;
+            --color-surface-alt: #f1f5f9;
+            --color-border: #e2e8f0;
+            --font-display: 'Heebo', sans-serif;
+            --font-body: 'Rubik', 'Heebo', sans-serif;
+            --space-unit: 0.25rem;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 2rem;
+            --space-xl: 4rem;
+            --space-2xl: 6rem;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 32px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-bounce: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-        * {
+        /* ============================
+           RESET & BASE
+           ============================ */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            scrollbar-color: var(--color-primary-light) var(--color-surface-alt);
+            scrollbar-width: thin;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--color-surface-alt); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--color-primary-light), var(--color-primary));
+            border-radius: 4px;
+        }
+
         body {
-            font-family: 'Heebo', sans-serif;
+            font-family: var(--font-body);
             line-height: 1.7;
-            color: #333;
-            background: #f9fafb;
+            color: var(--color-text);
+            background: var(--color-bg);
+            overflow-x: hidden;
         }
 
-        /* Colors from logo */
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1e3a8a;
-            --accent: #3b82f6;
-            --light: #eff6ff;
-            --success: #10b981;
-        }
+        img { display: block; max-width: 100%; }
+        a { text-decoration: none; color: inherit; }
 
-        /* Header & Navigation */
-        header {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            color: white;
-            padding: 1rem 0;
-            position: sticky;
+        /* ============================
+           SCROLL PROGRESS BAR
+           ============================ */
+        .scroll-progress {
+            position: fixed;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            right: 0;
+            height: 3px;
+            z-index: 10000;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-primary-bright));
+            width: 0%;
+            transition: width 0.1s linear;
         }
 
-        nav {
-            max-width: 1200px;
+        /* ============================
+           NOISE TEXTURE
+           ============================ */
+        .noise-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            filter: url(#noiseFilter);
+            opacity: 0.04;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        /* ============================
+           SCROLL REVEAL
+           ============================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ============================
+           HEADER & NAVIGATION
+           ============================ */
+        .site-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1000;
+            background: rgba(26, 58, 110, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all var(--transition-fast);
+        }
+
+        .site-header.scrolled {
+            background: rgba(26, 58, 110, 0.98);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+        }
+
+        .header-inner {
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0.75rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .logo-container {
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: white;
+            padding: 2px;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: white;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        /* ============================
+           HERO SECTION
+           ============================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(150deg, #0f2647 0%, #1a3a6e 40%, #2556a0 100%);
+        }
+
+        .hero-bg-shapes {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .hero-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+        }
+
+        .hero-blob-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--color-accent);
+            top: -200px;
+            left: -100px;
+            animation: float-blob 15s ease-in-out infinite;
+        }
+
+        .hero-blob-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--color-primary-bright);
+            bottom: -100px;
+            right: -100px;
+            animation: float-blob 20s ease-in-out infinite reverse;
+        }
+
+        .hero-blob-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--color-success);
+            top: 50%;
+            left: 50%;
+            animation: float-blob 18s ease-in-out infinite 5s;
+        }
+
+        @keyframes float-blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(40px, 30px) scale(1.05); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(232, 168, 56, 0.2);
+            border: 1px solid rgba(232, 168, 56, 0.4);
+            color: var(--color-accent);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            color: white;
+            line-height: 1.25;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--color-accent);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--color-success);
+            color: white;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-20deg);
+            animation: btn-shine 4s ease-in-out infinite;
+        }
+
+        @keyframes btn-shine {
+            0% { right: -100%; }
+            20% { right: 150%; }
+            100% { right: 150%; }
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 0.25rem;
+        }
+
+        /* Wave divider */
+        .wave-divider {
+            display: block;
+            width: 100%;
+            height: 80px;
+            overflow: hidden;
+            position: relative;
+            margin-top: -1px;
+        }
+
+        .wave-divider svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ============================
+           SECTION LAYOUT
+           ============================ */
+        .section {
+            padding: var(--space-2xl) var(--space-lg);
+            position: relative;
+        }
+
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--color-primary-bright);
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            color: var(--color-primary);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ============================
+           WHO WE HELP - CARDS
+           ============================ */
+        .help-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .help-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .help-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary-bright);
+        }
+
+        .help-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary-bright), var(--color-accent));
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .help-card:hover::before { opacity: 1; }
+
+        .help-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .help-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .help-card p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ============================
+           ABOUT / STORY SECTION
+           ============================ */
+        .about-section {
+            background: linear-gradient(180deg, var(--color-surface-alt) 0%, var(--color-bg) 100%);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image-wrapper {
+            position: relative;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .about-image-accent {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            width: 120px;
+            height: 120px;
+            background: var(--color-accent);
+            border-radius: var(--radius-lg);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .about-text p {
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .value-tag {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.03));
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            text-align: center;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--color-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .value-tag:hover {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.08));
+            transform: translateY(-2px);
+        }
+
+        /* ============================
+           ACTIVITIES SECTION
+           ============================ */
+        .activity-block {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 3rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .activity-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+            padding: 1.5rem 2rem;
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .logo {
-            width: 50px;
-            height: 50px;
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .brand-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: white;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--light) 0%, #dbeafe 100%);
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero-image {
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .hero-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            color: var(--primary-dark);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: var(--success);
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-top: 1rem;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        /* Sections */
-        section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        .section-title {
+        .activity-header-icon {
             font-size: 2rem;
-            color: var(--primary-dark);
-            margin-bottom: 2rem;
-            text-align: center;
+        }
+
+        .activity-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
             font-weight: 700;
+            color: white;
         }
 
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        .activity-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
         }
 
-        .card {
+        .activity-body {
+            padding: 2rem;
+        }
+
+        .activity-desc {
+            font-size: 1.05rem;
+            color: var(--color-text-light);
+            line-height: 1.9;
+            margin-bottom: 2rem;
+        }
+
+        /* ============================
+           IMAGE CAROUSEL
+           ============================ */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            background: var(--color-surface-alt);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: grab;
+        }
+
+        .carousel-track:active {
+            cursor: grabbing;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-fast);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .carousel-nav:hover {
             background: white;
-            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .carousel-prev { right: 16px; }
+        .carousel-next { left: 16px; }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 1rem;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: white;
+            width: 28px;
+            border-radius: 5px;
+        }
+
+        .carousel-counter {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        /* ============================
+           IMPACT NUMBERS
+           ============================ */
+        .numbers-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #0f2647 100%);
+            position: relative;
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .number-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .number-value {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--color-accent);
+            line-height: 1;
+        }
+
+        .number-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* ============================
+           DONATION SECTION
+           ============================ */
+        .donate-section {
+            background: linear-gradient(180deg, #f0f7ff 0%, var(--color-bg) 100%);
+        }
+
+        .donate-intro {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 3rem;
+        }
+
+        .donate-intro p {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            line-height: 1.8;
+        }
+
+        .donate-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .donate-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-smooth);
+        }
+
+        .donate-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .donate-card-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .donate-card h3 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .donate-card p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .donate-note {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-lg);
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        .donate-note p {
+            font-size: 1.15rem;
+            color: var(--color-success-dark);
+            font-weight: 500;
+            line-height: 1.8;
         }
 
-        .card h3 {
-            color: var(--primary);
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
+        /* ============================
+           CONTACT SECTION
+           ============================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
         }
 
-        .card p {
-            color: #64748b;
-            line-height: 1.6;
-        }
-
-        /* Content Note (for missing content) */
-        .content-note {
-            background: #fef3c7;
-            border: 2px dashed #f59e0b;
-            border-radius: 8px;
+        .contact-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
             padding: 1.5rem;
-            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-fast);
+        }
+
+        .contact-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .contact-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .contact-card-text {
+            font-family: var(--font-display);
+        }
+
+        .contact-card-text strong {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-primary);
+            margin-bottom: 0.15rem;
+        }
+
+        .contact-card-text span,
+        .contact-card-text a {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+
+        .contact-card-text a:hover {
+            color: var(--color-primary-bright);
+        }
+
+        /* ============================
+           FOOTER
+           ============================ */
+        .site-footer {
+            background: linear-gradient(180deg, #0f2647, #0a1a36);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+            line-height: 1.7;
+        }
+
+        .footer-col h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--color-accent);
+        }
+
+        .footer-col a {
+            display: block;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            padding: 0.3rem 0;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-col a:hover { color: white; }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 1.5rem;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+
+        /* ============================
+           MOBILE RESPONSIVE
+           ============================ */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: 0;
+                background: rgba(26, 58, 110, 0.98);
+                padding: 1rem;
+                border-top: 1px solid rgba(255,255,255,0.1);
+            }
+            .mobile-menu-btn { display: block; }
+
+            .hero-content { padding: 7rem 1.5rem 3rem; }
+            .hero-stats { gap: 1.5rem; }
+            .hero-stat-value { font-size: 1.8rem; }
+
+            .section { padding: var(--space-xl) var(--space-md); }
+
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .about-image { height: 300px; }
+            .about-image-accent { display: none; }
+
+            .carousel-slide img { height: 280px; }
+            .carousel-nav { width: 40px; height: 40px; font-size: 1rem; }
+
+            .numbers-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+
+            .header-inner { padding: 0.6rem 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .hero-stats { flex-direction: column; gap: 1rem; }
+            .hero-cta-group { flex-direction: column; align-items: center; }
+            .carousel-slide img { height: 220px; }
+        }
+
+        /* ============================
+           REDUCED MOTION
+           ============================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-delay: 0ms !important;
+                transition-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+            .scroll-progress { display: none !important; }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ============================
+           CONTENT NOTE (placeholder)
+           ============================ */
+        .content-note {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
         }
 
         .content-note h4 {
             color: #92400e;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;
         }
 
         .content-note p {
             color: #78350f;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
 
         .content-note ul {
             color: #78350f;
             margin-right: 1.5rem;
+            font-size: 0.9rem;
         }
 
-        /* Story Section */
-        .story-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .story-section h3 {
-            color: var(--primary-dark);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .story-with-image {
+        /* ============================
+           FULL-WIDTH IMAGE GALLERY (grid style)
+           ============================ */
+        .gallery-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        .story-image {
-            border-radius: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.5rem;
+            border-radius: var(--radius-md);
             overflow: hidden;
-            height: 100%;
         }
 
-        .story-image img {
+        .gallery-grid-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1;
+            cursor: pointer;
+        }
+
+        .gallery-grid-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.4s ease;
         }
 
-        /* Values */
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+        .gallery-grid-item:hover img {
+            transform: scale(1.08);
         }
 
-        .value-item {
-            background: var(--light);
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            font-weight: 600;
-            color: var(--primary-dark);
-            font-size: 1.1rem;
-        }
-
-        /* Activity Card */
-        .activity-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .activity-header {
-            background: var(--light);
-            padding: 1.5rem;
-            border-bottom: 2px solid var(--accent);
-        }
-
-        .activity-header h3 {
-            color: var(--primary-dark);
-            font-size: 1.5rem;
-        }
-
-        .activity-body {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            padding: 2rem;
-        }
-
-        .activity-image {
-            border-radius: 8px;
-            overflow: hidden;
-            height: 250px;
-        }
-
-        .activity-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Numbers */
-        .numbers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .number-card {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .number-value {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        .number-label {
-            color: #166534;
-            font-weight: 500;
-            margin-top: 0.5rem;
-        }
-
-        /* Story Card */
-        .story-card {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            border-right: 4px solid #f59e0b;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .story-card h4 {
-            color: #92400e;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-        }
-
-        .story-card p {
-            color: #78350f;
-            margin-bottom: 0.8rem;
-        }
-
-        .story-quote {
-            background: rgba(255,255,255,0.5);
-            border-right: 3px solid #f59e0b;
-            padding: 1rem;
-            margin-top: 1rem;
-            font-style: italic;
-            color: #92400e;
-        }
-
-        /* Donation Section */
-        .donation-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .donation-card {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .donation-amount {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--success);
-            margin-bottom: 0.5rem;
-        }
-
-        .donation-method {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .donation-method-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .donation-method h4 {
-            color: var(--primary-dark);
-            margin-bottom: 1rem;
-        }
-
-        /* Contact Items */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .contact-item {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            display: flex;
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(0,0,0,0.92);
+            display: none;
             align-items: center;
-            gap: 1rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            justify-content: center;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
         }
 
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
+        .lightbox.open { display: flex; }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: var(--radius-md);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            transition: background var(--transition-fast);
         }
 
-        /* Gallery */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.2); }
 
-        .gallery-item {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            height: 250px;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-
-        .gallery-caption {
+        .lightbox-nav {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
             color: white;
-            padding: 1rem;
-            font-weight: 500;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition-fast);
         }
 
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: white;
-            padding: 3rem 2rem;
-            margin-top: 4rem;
-        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+        .lightbox-prev { right: 20px; }
+        .lightbox-next { left: 20px; }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        footer h4 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        footer a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             color: rgba(255,255,255,0.7);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .story-with-image,
-            .activity-body {
-                grid-template-columns: 1fr;
-            }
-
-            .number-value {
-                font-size: 2rem;
-            }
+            font-family: var(--font-display);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
+
+<!-- SVG Noise Filter -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+    <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+    </filter>
+</svg>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Header -->
+<header class="site-header" id="siteHeader">
+    <div class="header-inner">
+        <a href="#home" class="logo-link">
+            <img src="logo/logo.jpg" alt="G.A.N. FREEDOM" class="logo-img">
+            <span class="logo-text">G.A.N. FREEDOM</span>
+        </a>
         <nav>
-            <div class="logo-container">
-                <div class="logo">
-                    <img src="logo/logo.jpg" alt="G.A.N. FREEDOM">
-                </div>
-                <div class="brand-name">G.A.N. FREEDOM</div>
-            </div>
-            <ul class="nav-links">
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#home">בית</a></li>
-                <li><a href="#activities">מה אנחנו עושים</a></li>
-                <li><a href="#stories">סיפורים</a></li>
+                <li><a href="#about">מי אנחנו</a></li>
+                <li><a href="#activities">פעילויות</a></li>
                 <li><a href="#donate">תרומה</a></li>
                 <li><a href="#contact">צור קשר</a></li>
             </ul>
         </nav>
-    </header>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="תפריט">&#9776;</button>
+    </div>
+</header>
 
-    <!-- Hero Section - עמוד הבית -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <div class="content-note">
-                <h4>📝 תמונה/וידאו ראשי</h4>
-                <p>כאן צריך להוסיף תמונה או וידאו ראשי שמייצג את העמותה</p>
+<!-- ============ HERO ============ -->
+<section class="hero noise-overlay" id="home">
+    <div class="hero-bg-shapes">
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+        <div class="hero-blob hero-blob-3"></div>
+    </div>
+    <div class="hero-content">
+        <div class="hero-badge">עמותה למען חיילים ומשפחות</div>
+        <h1>שאף חייל <span>לא ירגיש לבד</span></h1>
+        <p class="hero-subtitle">
+            עמותת G.A.N. FREEDOM פועלת למען חיילים פצועים ובודדים -
+            דירות מאובזרות, פינוקים בשטח, ותמיכה מתמשכת.
+            כי כל חייל ששומר עלינו, מגיע שישמרו עליו.
+        </p>
+        <div class="hero-cta-group">
+            <a href="#donate" class="btn btn-primary">לתרומה</a>
+            <a href="#activities" class="btn btn-outline">מה אנחנו עושים</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">3</div>
+                <div class="hero-stat-label">תחומי פעילות</div>
             </div>
-
-            <h1>למען החייל - לחיילים פצועים ובודדים</h1>
-
-            <div class="content-note">
-                <h4>📝 משפט הפתיחה הראשי</h4>
-                <p><strong>מה לכתוב:</strong> משפט אחד שמסכם את כל מה שהעמותה עושה</p>
-                <p><strong>לדוגמה:</strong></p>
-                <ul>
-                    <li>"אנחנו עמותה שמספקת בית חם לחיילים בודדים דרך דירות מאובזרות וליווי אישי כדי שכל חייל ירגיש שיש לו בית בישראל"</li>
-                    <li>"אנחנו עוזרים לחיילים פצועים ובודדים למצוא מקום בטוח ותמיכה רגשית בזמן השירות"</li>
-                    <li>"העמותה שלנו פועלת כדי שאף חייל לא ירגיש לבד - דרך דירות, פינוקים ותמיכה מתמשכת"</li>
-                </ul>
+            <div class="hero-stat">
+                <div class="hero-stat-value">24/7</div>
+                <div class="hero-stat-label">זמינות לחיילים</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">100%</div>
+                <div class="hero-stat-label">מהלב</div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Who We Help -->
-    <section>
-        <h2 class="section-title">למי אנחנו עוזרים</h2>
+<!-- Wave -->
+<div class="wave-divider" style="background: var(--color-bg);">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,40 1440,35 L1440,80 L0,80 Z" fill="var(--color-bg)"/>
+    </svg>
+</div>
 
-        <div class="cards-grid">
-            <div class="card">
+<!-- ============ WHO WE HELP ============ -->
+<section class="section" id="help">
+    <div class="section-inner">
+        <div class="section-header reveal">
+            <div class="section-label">למי אנחנו עוזרים</div>
+            <h2 class="section-title">כל חייל מגיע לתמיכה</h2>
+            <p class="section-desc">אנחנו כאן עבור החיילים שצריכים את זה הכי הרבה</p>
+        </div>
+        <div class="help-cards">
+            <div class="help-card reveal reveal-delay-1">
+                <div class="help-card-icon">&#127968;</div>
                 <h3>חיילים בודדים</h3>
-                <p>תמיכה וליווי לחיילים שמשרתים ללא משפחה קרובה</p>
+                <p>חיילים שמשרתים ללא משפחה קרובה בארץ. אנחנו נותנים להם בית, חום, ותחושה שמישהו חושב עליהם.</p>
             </div>
-
-            <div class="card">
+            <div class="help-card reveal reveal-delay-2">
+                <div class="help-card-icon">&#128154;</div>
                 <h3>חיילים פצועים</h3>
-                <p>סיוע ותמיכה לחיילים שנפצעו במהלך השירות</p>
+                <p>חיילים שנפצעו במהלך השירות ומשפחותיהם. תמיכה, ליווי, ועזרה בתהליך ההחלמה.</p>
             </div>
-
-            <div class="content-note">
-                <h4>📝 קבוצות נוספות</h4>
-                <p><strong>שאלות:</strong></p>
-                <ul>
-                    <li>האם העמותה עוזרת גם למשפחות חיילים?</li>
-                    <li>האם יש ליווי לחיילים משוחררים?</li>
-                    <li>האם מטפלים גם בחיילים בקושי כלכלי?</li>
-                    <li>יש קבוצת גיל מסוימת? (רק צעירים/כולם)</li>
-                </ul>
-                <p><strong>לדוגמה:</strong> "משפחות שכולות", "חיילים בקושי נפשי", "משפחות חיילים נזקקות"</p>
+            <div class="help-card reveal reveal-delay-3">
+                <div class="help-card-icon">&#128106;</div>
+                <h3>משפחות חיילים</h3>
+                <p>משפחות שזקוקות לתמיכה ולעזרה בזמן שיקום או לאורך תקופת השירות.</p>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="content-note" style="text-align: center; margin-top: 3rem;">
-            <h4>📝 מה הכי חשוב לנו</h4>
-            <p><strong>מה לכתוב:</strong> משפט אחד שמסכם מה מניע אתכם</p>
-            <p><strong>לדוגמה:</strong></p>
-            <ul style="text-align: right; display: inline-block;">
-                <li>"הדבר שהכי חשוב לנו הוא שכל חייל ירגיש שיש מי שדואג לו"</li>
-                <li>"אנחנו מאמינים שאף חייל לא צריך להרגיש לבד בזמן ששומר עלינו"</li>
-                <li>"החזון שלנו: ישראל שבה כל חייל מרגיש שיש לו בית"</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Our Story -->
-    <section>
-        <h2 class="section-title">סיפור ההקמה</h2>
-
-        <div class="story-section">
-            <div class="story-with-image">
-                <div>
-                    <h3>למה הקמנו את העמותה</h3>
-
-                    <div class="content-note">
-                        <h4>📝 סיפור ההקמה</h4>
-                        <p><strong>שאלות שיעזרו:</strong></p>
-                        <ul>
-                            <li><strong>מה ראיתם בשטח?</strong> איזה מצב/סיטואציה הובילה אתכם להקים את העמותה?</li>
-                            <li><strong>הרגע המכריע:</strong> מתי בדיוק הבנתם ש"אי אפשר להמשיך ככה"? יש רגע או אירוע ספציפי?</li>
-                            <li><strong>מי הקים?</strong> מי היו המייסדים? רקע אישי?</li>
-                            <li><strong>התחלה:</strong> מה עשיתם ביום הראשון/שבוע/חודש?</li>
-                            <li><strong>התפתחות:</strong> איך העמותה גדלה מאז? כמה זמן לקח להגיע למצב הנוכחי?</li>
-                        </ul>
-                        <p><strong>לדוגמה לסיפור:</strong></p>
-                        <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 1rem; border-radius: 6px;">
-                            "הכל התחיל ב-2023 כשפגשנו חייל בודד שישן במכונית שלו כי לא היה לו לאן ללכת בסופי שבוע. ידענו שצריך לעשות משהו. התחלנו עם דירה אחת שרכשנו, ופתאום התחילו להגיע עוד ועוד פניות. היום, שנה וחצי אחרי, אנחנו מפעילים 8 דירות ועוזרים לעשרות חיילים."
-                        </p>
-                    </div>
-                </div>
-
-                <div class="content-note">
-                    <h4>📝 תמונה לסיפור</h4>
-                    <p>תמונה שמייצגת את ההתחלה או את הסיפור</p>
+<!-- ============ ABOUT ============ -->
+<section class="section about-section" id="about">
+    <div class="section-inner">
+        <div class="about-grid">
+            <div class="about-image-wrapper reveal">
+                <img src="soldiers-treats/IMG-20250916-WA0323.jpg" alt="פעילות העמותה" class="about-image">
+                <div class="about-image-accent"></div>
+            </div>
+            <div class="about-text reveal reveal-delay-2">
+                <div class="section-label">הסיפור שלנו</div>
+                <h2>הקמנו את העמותה כי ראינו שחיילים צריכים יותר</h2>
+                <p>
+                    עמותת G.A.N. FREEDOM הוקמה מתוך הבנה פשוטה - שכל חייל ששומר עלינו, מגיע שישמרו עליו.
+                    ראינו חיילים בודדים בלי מקום ללכת בסופי שבוע, חיילים פצועים שצריכים ליווי, ומשפחות שמתמודדות לבד.
+                </p>
+                <p>
+                    החלטנו לפעול - דירות מאובזרות, פינוקים בשטח, שיפוץ מבנים, וליווי אישי.
+                    אנחנו פועלים מהלב, 100% מתנדבים, כי זה הדבר הנכון לעשות.
+                </p>
+                <div class="values-grid">
+                    <div class="value-tag">אהבת ישראל</div>
+                    <div class="value-tag">אחריות</div>
+                    <div class="value-tag">מסירות</div>
+                    <div class="value-tag">חמלה</div>
+                    <div class="value-tag">נתינה</div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <h3 class="section-title" style="margin-top: 3rem;">הערכים שמובילים אותנו</h3>
-
-        <div class="content-note">
-            <h4>📝 3-5 ערכים מרכזיים</h4>
-            <p><strong>שאלות:</strong></p>
-            <ul>
-                <li>מה מנחה אתכם בקבלת החלטות?</li>
-                <li>איך אתם רוצים שאנשים יתארו אתכם?</li>
-                <li>מה לא תתפשרו עליו לעולם?</li>
-                <li>מה מייחד אתכם מעמותות אחרות?</li>
-            </ul>
-            <p><strong>דוגמאות לערכים:</strong> אחריות, מסירות, אהבת ישראל, חיבור אנושי, נתינה ללא תמורה, כבוד, אמפתיה, מקצועיות, שקיפות, חמלה</p>
-            <p><strong>איך לכתוב:</strong> בחר 3-5 ערכים וכתוב משפט קצר על כל אחד</p>
+<!-- ============ ACTIVITIES ============ -->
+<section class="section" id="activities">
+    <div class="section-inner">
+        <div class="section-header reveal">
+            <div class="section-label">מה אנחנו עושים</div>
+            <h2 class="section-title">שלוש דרכים לעשות שינוי</h2>
+            <p class="section-desc">כל פעילות מביאה אור לחיילים שצריכים את זה</p>
         </div>
 
-        <div class="content-note" style="text-align: center; margin-top: 2rem;">
-            <h4>📝 החזון שלנו</h4>
-            <p><strong>שאלות:</strong></p>
-            <ul style="text-align: right; display: inline-block;">
-                <li>איפה אתם רוצים להיות בעוד 3-5 שנים?</li>
-                <li>אם הכל יצליח מעבר לציפיות - איך זה ייראה?</li>
-                <li>איזו השפעה אתם רוצים שתהיה לכם על ישראל?</li>
-            </ul>
-            <p><strong>דוגמאות לחזון:</strong></p>
-            <ul style="text-align: right; display: inline-block;">
-                <li>"עוד שלוש שנים, כל חייל בודד בישראל יידע שיש לו כתובת לפנות אליה"</li>
-                <li>"אנחנו שואפים שהמילה 'חייל בודד' תהפוך למיותרת - כי אף אחד לא יהיה באמת לבד"</li>
-                <li>"החזון: להפוך לדגם ארצי שאחרים ישכפלו"</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- What We Do -->
-    <section id="activities">
-        <h2 class="section-title">מה אנחנו עושים</h2>
-
-        <!-- Activity 1 -->
-        <div class="activity-card">
+        <!-- Activity 1: Apartments -->
+        <div class="activity-block reveal">
             <div class="activity-header">
-                <h3>דירות לחיילים</h3>
+                <span class="activity-header-icon">&#127968;</span>
+                <div>
+                    <h3>דירות לחיילים</h3>
+                    <p>בית חם לכל חייל בודד</p>
+                </div>
             </div>
             <div class="activity-body">
-                <div>
-                    <div class="content-note">
-                        <h4>📝 פרטי הפעילות - דירות לחיילים</h4>
-
-                        <p><strong>שאלות בסיסיות:</strong></p>
-                        <ul>
-                            <li><strong>כמה דירות יש?</strong> בניין אחד? כמה דירות בכל בניין?</li>
-                            <li><strong>איפה ממוקם?</strong> עיר? אזור? קרוב לבסיסים?</li>
-                            <li><strong>כמה חיילים בכל דירה?</strong> 1? 2? יותר?</li>
-                        </ul>
-
-                        <p><strong>קריטריונים:</strong></p>
-                        <ul>
-                            <li><strong>מי זכאי?</strong> רק חיילים בודדים? גם פצועים? גם בקושי כלכלי?</li>
-                            <li><strong>איך מגישים בקשה?</strong> תהליך קבלה?</li>
-                            <li><strong>לכמה זמן?</strong> חודש? חצי שנה? עד סוף השירות?</li>
-                            <li><strong>האם יש עלות?</strong> חינם לגמרי? סמלי? משתנה לפי יכולת?</li>
-                        </ul>
-
-                        <p><strong>מה כלול בדירה?</strong></p>
-                        <ul>
-                            <li>ריהוט מלא? מיטות? ארונות? מטבח מאובזר?</li>
-                            <li>כלי בית? מצעים? מגבות?</li>
-                            <li>אינטרנט? חשמל? מים? (כלול במחיר או בנפרד?)</li>
-                        </ul>
-
-                        <p><strong>ליווי ותמיכה:</strong></p>
-                        <ul>
-                            <li>יש ליווי אישי? מי שהחייל יכול לפנות אליו?</li>
-                            <li>פעילויות חברתיות? מפגשים עם חיילים אחרים?</li>
-                            <li>עזרה במציאת עבודה? לימודים?</li>
-                        </ul>
-
-                        <p><strong>דוגמה למה שאפשר לכתוב:</strong></p>
-                        <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 1rem; border-radius: 6px;">
-                            "בבניין שלנו בנתניה יש 8 דירות מאובזרות במלואן. כל דירה מיועדת ל-2 חיילים בודדים וכוללת ריהוט מלא, מטבח מאובזר, אינטרנט, וכל מה שצריך להרגיש בבית. החיילים יכולים להישאר עד סוף השירות ללא כל עלות. יש לנו רכז שעומד בקשר עם כל החיילים ומארגן פעילויות משותפות."
-                        </p>
+                <p class="activity-desc">
+                    אנחנו מפעילים דירות מאובזרות במלואן לחיילים בודדים.
+                    כל דירה כוללת ריהוט מלא, מטבח מאובזר, אינטרנט, מצעים -
+                    כל מה שצריך כדי להרגיש בבית.
+                    החיילים מתגוררים ללא עלות ומקבלים ליווי אישי לאורך כל תקופת השירות.
+                </p>
+                <!-- Building Renovation Carousel -->
+                <div class="carousel-container" id="carousel-building">
+                    <div class="carousel-track">
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0416.jpg" alt="הבניין" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0385.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0387.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0388.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0390.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0391.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0392.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0394.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0395.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0396.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0397.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0398.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0399.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0406.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0407.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0408.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0409.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0420.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0480.jpg" alt="שיפוץ" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="building-renovation/IMG-20250916-WA0505.jpg" alt="שיפוץ" loading="lazy"></div>
                     </div>
-                </div>
-                <div>
-                    <div class="activity-image">
-                        <img src="building-renovation/IMG-20250916-WA0416.jpg" alt="הבניין">
-                    </div>
+                    <button class="carousel-nav carousel-prev" aria-label="הקודם">&#10095;</button>
+                    <button class="carousel-nav carousel-next" aria-label="הבא">&#10094;</button>
+                    <div class="carousel-counter"><span class="carousel-current">1</span> / <span class="carousel-total">20</span></div>
+                    <div class="carousel-dots"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Activity 2 -->
-        <div class="activity-card">
+        <!-- Activity 2: Treats -->
+        <div class="activity-block reveal">
             <div class="activity-header">
-                <h3>פינוקים לחיילים</h3>
-            </div>
-            <div class="activity-body" style="grid-template-columns: 1fr;">
+                <span class="activity-header-icon">&#127873;</span>
                 <div>
-                    <div class="content-note">
-                        <h4>📝 פרטי הפעילות - פינוקים לחיילים</h4>
-
-                        <p><strong>תדירות ומיקום:</strong></p>
-                        <ul>
-                            <li><strong>כמה פעמים?</strong> שבועי? חודשי? לפי אירועים מיוחדים? חגים?</li>
-                            <li><strong>איפה?</strong> בבסיסים? בתי חולים? במקום מרכזי? בבניין שלכם?</li>
-                            <li><strong>כמה חיילים בכל אירוע?</strong> 10? 50? 100?</li>
-                        </ul>
-
-                        <p><strong>מה מחלקים/מארגנים?</strong></p>
-                        <ul>
-                            <li>חבילות אוכל? מה כלול בחבילה?</li>
-                            <li>מתנות? אילו סוגים?</li>
-                            <li>פעילויות? (ברביקיו, משחקים, קולנוע וכו')</li>
-                            <li>ליווי אישי? שיחות? יעוץ?</li>
-                        </ul>
-
-                        <p><strong>קבוצת היעד:</strong></p>
-                        <ul>
-                            <li>לכל החיילים? חיילים בודדים בלבד? פצועים? משפחות?</li>
-                            <li>יחידות מסוימות? כל הצבא?</li>
-                            <li>איך חיילים נרשמים? צריך הזמנה מראש?</li>
-                        </ul>
-
-                        <p><strong>השפעה ורגש:</strong></p>
-                        <ul>
-                            <li>מה החיילים אומרים אחרי האירועים?</li>
-                            <li>איזה רגע הכי נוגע ללב?</li>
-                            <li>למה זה חשוב מעבר לחבילת מתנה?</li>
-                        </ul>
-
-                        <p><strong>דוגמה למה שאפשר לכתוב:</strong></p>
-                        <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 1rem; border-radius: 6px;">
-                            "פעם בחודש אנחנו מגיעים לבסיס צאלים ומחלקים חבילות פינוק ל-80-100 חיילים בודדים. כל חבילה כוללת ממתקים, שוקולדים, מוצרי טיפוח ומכתב אישי. אנחנו נשארים שעתיים, משוחחים עם החיילים, ולפעמים פשוט מקשיבים. רוב החיילים אומרים שהרגע שבו מישהו חושב עליהם - זה יותר חשוב מהמתנה עצמה."
-                        </p>
-                    </div>
+                    <h3>פינוקים לחיילים</h3>
+                    <p>כי מגיע להם לדעת שחושבים עליהם</p>
                 </div>
-
-                <!-- Gallery -->
-                <h3 style="margin-top: 2rem; color: var(--primary-dark);">גלריית תמונות מהפעילויות</h3>
-                <div class="gallery">
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0323.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור: מה קורה בתמונה? איזה אירוע? מתי?</p>
-                            </div>
-                        </div>
+            </div>
+            <div class="activity-body">
+                <p class="activity-desc">
+                    אנחנו מגיעים לבסיסים ולבתי חולים עם חבילות פינוק, ממתקים, מוצרי טיפוח ואהבה.
+                    כל חבילה מכילה גם מכתב אישי.
+                    אנחנו נשארים, משוחחים, מקשיבים - כי לפעמים מה שהחייל צריך הכי הרבה זה לדעת שמישהו פשוט שם.
+                </p>
+                <!-- Soldiers Treats Carousel -->
+                <div class="carousel-container" id="carousel-treats">
+                    <div class="carousel-track">
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0323.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0297.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0298.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0301.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0304.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0306.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0308.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0309.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0310.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0311.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0312.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0313.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0314.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0315.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0316.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0317.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0318.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0319.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0322.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
+                        <div class="carousel-slide"><img src="soldiers-treats/IMG-20250916-WA0324.jpg" alt="פינוקים לחיילים" loading="lazy"></div>
                     </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0297.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור: מה מיוחד בתמונה הזו?</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0310.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור: לדוגמה "חלוקת חבילות לחיילי גבעתי, דצמבר 2024"</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0313.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0324.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0339.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0354.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0370.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0378.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="soldiers-treats/IMG-20250916-WA0404.jpg" alt="פינוקים לחיילים">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור</p>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="carousel-nav carousel-prev" aria-label="הקודם">&#10095;</button>
+                    <button class="carousel-nav carousel-next" aria-label="הבא">&#10094;</button>
+                    <div class="carousel-counter"><span class="carousel-current">1</span> / <span class="carousel-total">20</span></div>
+                    <div class="carousel-dots"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Journey Diary - Renovation -->
-        <div class="activity-card" style="margin-top: 3rem;">
+        <!-- Activity 3: Building Renovation -->
+        <div class="activity-block reveal">
             <div class="activity-header">
-                <h3>יומן מסע - שיפוץ הבניין</h3>
-            </div>
-            <div class="activity-body" style="grid-template-columns: 1fr;">
+                <span class="activity-header-icon">&#128295;</span>
                 <div>
-                    <div class="content-note">
-                        <h4>📝 סיפור השיפוץ</h4>
-                        <p><strong>שאלות שיעזרו לבנות את היומן:</strong></p>
-                        <ul>
-                            <li><strong>איך התחיל?</strong> במה מצב היה הבניין בהתחלה?</li>
-                            <li><strong>למה החלטתם לשפץ?</strong> מה הייתה המטרה?</li>
-                            <li><strong>תהליך:</strong> כמה זמן לקח? אילו שלבים עברתם?</li>
-                            <li><strong>קשיים:</strong> האם היו אתגרים בדרך?</li>
-                            <li><strong>אנשים:</strong> מי עזר? קבלנים? מתנדבים? תורמים?</li>
-                            <li><strong>היום:</strong> איך הבניין נראה עכשיו? מה השתנה?</li>
-                        </ul>
-                        <p><strong>הנחייה:</strong> תן תיאור קצר לכל תמונה למטה - תאריך, שלב השיפוץ, מה קורה בתמונה</p>
-                        <p><strong>לדוגמה:</strong> "ספטמבר 2024 - תחילת שיפוץ הקומה השנייה" או "אוקטובר 2024 - צביעת הקירות בדירה 3"</p>
-                    </div>
+                    <h3>שיפוץ ובנייה</h3>
+                    <p>בונים בית לחיילים מהיסוד</p>
                 </div>
-
-                <!-- Renovation Journey Gallery -->
-                <h3 style="margin-top: 2rem; color: var(--primary-dark);">תמונות מהמסע</h3>
-                <div class="gallery">
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0416.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך: לדוגמה "יוני 2024 - המבנה לפני השיפוץ"</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0387.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0390.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0303.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0385.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0395.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0407.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0409.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0420.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0480.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0493.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item">
-                        <img src="building-renovation/IMG-20250916-WA0505.jpg" alt="שיפוץ בניין">
-                        <div class="gallery-caption">
-                            <div class="content-note" style="margin: 0; padding: 0.5rem; background: transparent; border: none;">
-                                <p style="color: white; margin: 0;">📝 תיאור + תאריך: לדוגמה "נובמבר 2024 - הבניין המשופץ מוכן לקליטת חיילים"</p>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div class="activity-body">
+                <p class="activity-desc">
+                    שיפצנו בניין שלם מאפס והפכנו אותו לבית חם לחיילים.
+                    מקירות חשופים ועד דירות מאובזרות - כל שלב בשיפוץ הוא צעד נוסף לקראת בית לחייל.
+                    בגלריה למטה אפשר לראות את המסע המדהים מלפני ואחרי.
+                </p>
+                <!-- More building images as gallery grid -->
+                <div class="gallery-grid" id="gallery-renovation">
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0429.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0430.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0432.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0433.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0443.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0444.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0448.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0453.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0493.jpg" alt="שיפוץ" loading="lazy"></div>
+                    <div class="gallery-grid-item"><img src="building-renovation/IMG-20250916-WA0303.jpg" alt="שיפוץ" loading="lazy"></div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="content-note">
-            <h4>📝 פעילויות נוספות</h4>
-            <p><strong>שאלות:</strong></p>
-            <ul>
-                <li>האם יש עוד סוגי פעילות מלבד דירות ופינוקים?</li>
-                <li>ליווי רפואי לפצועים?</li>
-                <li>פעילויות חברתיות/טיולים?</li>
-                <li>עזרה במציאת עבודה?</li>
-                <li>תמיכה נפשית?</li>
-            </ul>
-            <p><strong>אפשר להוסיף עד 6 פעילויות בסך הכל</strong></p>
+<!-- ============ NUMBERS ============ -->
+<div class="wave-divider" style="background: var(--color-primary);">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,50 C480,0 960,80 1440,30 L1440,80 L0,80 Z" fill="var(--color-primary)"/>
+    </svg>
+</div>
+<section class="section numbers-section noise-overlay">
+    <div class="section-inner">
+        <div class="section-header reveal">
+            <div class="section-label" style="color: var(--color-accent);">ההשפעה שלנו</div>
+            <h2 class="section-title" style="color: white;">המספרים מדברים</h2>
         </div>
-
-        <!-- Numbers -->
-        <h3 class="section-title" style="margin-top: 3rem;">המספרים שלנו</h3>
-
         <div class="numbers-grid">
-            <div class="number-card">
-                <div class="number-value">???</div>
-                <div class="number-label">חיילים/משפחות שליווינו</div>
-                <div class="content-note" style="margin-top: 1rem; background: white;">
-                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📝 כמה חיילים עזרתם?</h4>
-                    <p style="font-size: 0.85rem; margin: 0;"><strong>שאלות:</strong></p>
-                    <ul style="font-size: 0.85rem; text-align: right; margin: 0.5rem 0;">
-                        <li>כמה חיילים בסך הכל?</li>
-                        <li>מאז מתי אתם סופרים?</li>
-                        <li>גם משפחות? כמה?</li>
-                    </ul>
-                    <p style="font-size: 0.85rem; margin: 0;"><strong>טיפ:</strong> מספר משוער זה בסדר</p>
-                </div>
+            <div class="number-card reveal reveal-delay-1">
+                <div class="number-value">3</div>
+                <div class="number-label">תחומי פעילות מרכזיים</div>
             </div>
-
-            <div class="number-card">
-                <div class="number-value">???</div>
-                <div class="number-label">פעילויות בשנה האחרונה</div>
-                <div class="content-note" style="margin-top: 1rem; background: white;">
-                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📝 כמה אירועים?</h4>
-                    <p style="font-size: 0.85rem; margin: 0;"><strong>שאלות:</strong></p>
-                    <ul style="font-size: 0.85rem; text-align: right; margin: 0.5rem 0;">
-                        <li>כמה אירועי פינוק?</li>
-                        <li>כמה דירות שופצו?</li>
-                        <li>פעילויות נוספות?</li>
-                    </ul>
-                </div>
+            <div class="number-card reveal reveal-delay-2">
+                <div class="number-value">100+</div>
+                <div class="number-label">תמונות מפעילויות</div>
             </div>
-
-            <div class="number-card">
-                <div class="number-value">???</div>
-                <div class="number-label">שנות פעילות</div>
-                <div class="content-note" style="margin-top: 1rem; background: white;">
-                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📝 מאז מתי?</h4>
-                    <p style="font-size: 0.85rem; margin: 0;">באיזו שנה הוקמה העמותה?</p>
-                    <p style="font-size: 0.85rem; margin: 0;">(לדוגמה: אם הוקמה ב-2020, כתוב "4")</p>
-                </div>
+            <div class="number-card reveal reveal-delay-3">
+                <div class="number-value">&#10084;</div>
+                <div class="number-label">פועלים מהלב</div>
             </div>
         </div>
+    </div>
+</section>
+<div class="wave-divider" style="background: #f0f7ff; margin-top: -1px;">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" style="transform: rotate(180deg);">
+        <path d="M0,50 C480,0 960,80 1440,30 L1440,80 L0,80 Z" fill="var(--color-primary)"/>
+    </svg>
+</div>
 
-        <h3 class="section-title" style="margin-top: 3rem;">איפה אנחנו פועלים</h3>
+<!-- ============ MORE PHOTOS GALLERY ============ -->
+<section class="section" style="background: #f0f7ff;">
+    <div class="section-inner">
+        <div class="section-header reveal">
+            <div class="section-label">עוד מהפעילות</div>
+            <h2 class="section-title">רגעים מהשטח</h2>
+            <p class="section-desc">תמונות מפעילויות הפינוק עם החיילים</p>
+        </div>
+        <div class="gallery-grid reveal" id="gallery-treats">
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0325.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0326.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0327.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0328.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0329.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0339.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0354.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0370.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0378.jpg" alt="פינוקים" loading="lazy"></div>
+            <div class="gallery-grid-item"><img src="soldiers-treats/IMG-20250916-WA0404.jpg" alt="פינוקים" loading="lazy"></div>
+        </div>
+    </div>
+</section>
 
-        <div class="cards-grid">
-            <div class="card">
-                <h3>אזורים</h3>
+<!-- ============ DONATE ============ -->
+<section class="section donate-section" id="donate">
+    <div class="section-inner">
+        <div class="section-header reveal">
+            <div class="section-label">תרומה ותמיכה</div>
+            <h2 class="section-title">כל תרומה משנה חיים</h2>
+        </div>
+        <div class="donate-intro reveal">
+            <p>
+                התרומה שלך מאפשרת לנו להמשיך לתת בית, חום ותמיכה לחיילים שצריכים את זה.
+                כל שקל הולך ישירות לפעילות בשטח.
+            </p>
+        </div>
+
+        <div class="donate-methods">
+            <div class="donate-card reveal reveal-delay-1">
+                <div class="donate-card-icon">&#128241;</div>
+                <h3>תרומה בביט</h3>
                 <div class="content-note">
-                    <h4>📝 באילו ערים/אזורים?</h4>
-                    <p><strong>שאלות:</strong></p>
-                    <ul style="text-align: right;">
-                        <li>באילו ערים יש דירות?</li>
-                        <li>לאילו אזורים מגיעים?</li>
-                        <li>צפון? דרום? מרכז?</li>
-                    </ul>
-                    <p><strong>לדוגמה:</strong> "נתניה, תל אביב, והמרכז"</p>
+                    <h4>להשלמה: מספר ביט</h4>
+                    <p>מה מספר הטלפון של העמותה לתרומה בביט?</p>
                 </div>
             </div>
-
-            <div class="card">
-                <h3>מקומות</h3>
+            <div class="donate-card reveal reveal-delay-2">
+                <div class="donate-card-icon">&#127974;</div>
+                <h3>העברה בנקאית</h3>
                 <div class="content-note">
-                    <h4>📝 באילו בסיסים/בתי חולים?</h4>
-                    <p><strong>שאלות:</strong></p>
-                    <ul style="text-align: right;">
-                        <li>לאילו בסיסים מגיעים?</li>
-                        <li>באילו בתי חולים?</li>
-                        <li>מיקומים קבועים או משתנה?</li>
-                    </ul>
-                    <p><strong>לדוגמה:</strong> "בסיס צאלים, תל השומר, שיבא"</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stories -->
-    <section id="stories">
-        <h2 class="section-title">סיפורים והשפעה</h2>
-
-        <div class="content-note" style="text-align: center;">
-            <h4>📝 מה הכי מרגש אותנו</h4>
-            <p>הרגעים שבהם אתם מרגישים שהעמותה באמת משנה משהו</p>
-        </div>
-
-        <!-- Story 1 -->
-        <div class="story-card">
-            <h4>סיפור 1: [כותרת]</h4>
-
-            <div class="content-note">
-                <h4>📝 סיפור ראשון</h4>
-
-                <p><strong>מבנה הסיפור - כך זה עובד הכי טוב:</strong></p>
-
-                <p><strong>1. כותרת מרגשת:</strong></p>
-                <ul>
-                    <li>לדוגמה: "החייל שמצא בית", "מחייל בודד לאח גדול", "איך שבוע אחד שינה הכל"</li>
-                </ul>
-
-                <p><strong>2. המצב בהתחלה (2-3 משפטים):</strong></p>
-                <ul>
-                    <li>מה היה מצבו של החייל/משפחה?</li>
-                    <li>איזה אתגר הוא התמודד איתו?</li>
-                    <li>איך הגיע אליכם? מי הפנה?</li>
-                </ul>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 0.5rem; border-radius: 4px;">
-                    דוגמה: "דני, חייל בודד בן 19, הגיע לארץ לבד ללא משפחה. היה ישן בבסיס גם בסופי שבוע כי לא היה לו לאן ללכת. חבר יחידה הפנה אותו אלינו."
-                </p>
-
-                <p><strong>3. מה עשיתם (2-3 משפטים):</strong></p>
-                <ul>
-                    <li>איך עזרתם לו/לה?</li>
-                    <li>מה היה החלק הכי משמעותי?</li>
-                    <li>כמה זמן זה לקח?</li>
-                </ul>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 0.5rem; border-radius: 4px;">
-                    דוגמה: "קיבלנו אותו לדירה משותפת עם שני חיילים נוספים. בתוך שבוע הוא קיבל חדר מאובזר, מפתח, ומישהו לדבר איתו בסופי השבוע."
-                </p>
-
-                <p><strong>4. מה השתנה (2-3 משפטים):</strong></p>
-                <ul>
-                    <li>איך זה שינה את חייו?</li>
-                    <li>מה הוא עושה היום?</li>
-                    <li>איך הוא מרגיש?</li>
-                </ul>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 0.5rem; border-radius: 4px;">
-                    דוגמה: "היום, 8 חודשים אחרי, דני לא רק מרגיש שיש לו בית - הוא עוזר לקלוט חיילים חדשים. הוא אמר לנו: 'זה המקום שבו הפכתי לחלק ממשהו גדול יותר'."
-                </p>
-
-                <p><strong>5. ציטוט מרגש (1 משפט):</strong></p>
-                <ul>
-                    <li>משהו שהחייל/משפחה אמרו</li>
-                    <li>משפט שמסכם את ההשפעה</li>
-                </ul>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 0.5rem; border-radius: 4px;">
-                    דוגמה: "פעם הראשונה שהרגשתי שמישהו באמת רוצה אותי כאן"
-                </p>
-
-                <p><strong>תמונה (אם יש):</strong></p>
-                <ul>
-                    <li>וודא שמותר לפרסם!</li>
-                    <li>אפשר לטשטש פנים אם צריך</li>
-                    <li>או תמונה כללית מהאירוע</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Story 2 -->
-        <div class="story-card">
-            <h4>סיפור 2: [כותרת]</h4>
-
-            <div class="content-note">
-                <h4>📝 סיפור שני</h4>
-                <p>אותו מבנה כמו סיפור 1:</p>
-                <ol style="text-align: right;">
-                    <li>כותרת מרגשת</li>
-                    <li>המצב בהתחלה (2-3 משפטים)</li>
-                    <li>מה עשיתם (2-3 משפטים)</li>
-                    <li>מה השתנה (2-3 משפטים)</li>
-                    <li>ציטוט מרגש</li>
-                    <li>תמונה (אם יש)</li>
-                </ol>
-                <p><strong>אפשר להוסיף עד 4 סיפורים בסך הכל</strong></p>
-                <p><strong>טיפ:</strong> מגוון סיפורים - חייל בודד, פצוע, משפחה, מתנדב, וכו'</p>
-            </div>
-        </div>
-
-        <div class="content-note" style="text-align: center; margin-top: 2rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
-            <h4>📝 משפט מסכם</h4>
-            <p><strong>לדוגמה:</strong> "אם חייל/ת אחד היה אומר לנו משפט אחד בסוף התהליך, היינו רוצים שזה יהיה..."</p>
-        </div>
-    </section>
-
-    <!-- Donate -->
-    <section id="donate" style="background: var(--light); border-radius: 12px; padding: 3rem 2rem;">
-        <h2 class="section-title">תרומה ותמיכה</h2>
-
-        <div class="content-note" style="text-align: center;">
-            <h4>📝 תמונה מרגשת</h4>
-            <p><strong>שאלות:</strong></p>
-            <ul style="text-align: right; display: inline-block;">
-                <li>יש תמונה שמראה את התוצאה של הפעילות?</li>
-                <li>תמונה שמראה מה התרומה משיגה בפועל?</li>
-                <li>משהו שיגרום לאנשים לרצות לעזור?</li>
-            </ul>
-        </div>
-
-        <h3 class="section-title" style="font-size: 1.5rem; margin-top: 3rem;">איך לתרום?</h3>
-
-        <div class="cards-grid">
-            <div class="donation-method">
-                <div class="donation-method-icon">📱</div>
-                <h4>תרומה בביט</h4>
-
-                <div class="content-note">
-                    <h4>📝 מספר ביט</h4>
-                    <p><strong>שאלות:</strong></p>
-                    <ul style="text-align: right;">
-                        <li>מה מספר הטלפון של העמותה לתרומה בביט?</li>
-                        <li>יש קישור מיוחד לביט? (אם כן, רשום אותו)</li>
-                        <li>יש שם עמותה שיופיע בביט? (אותו שם צריך לכתוב)</li>
-                    </ul>
-                    <p><strong>לדוגמה:</strong> "050-1234567" או "קישור: bit.ly/gan-freedom"</p>
-                </div>
-            </div>
-
-            <div class="donation-method">
-                <div class="donation-method-icon">🏦</div>
-                <h4>העברה בנקאית</h4>
-
-                <div class="content-note">
-                    <h4>📝 פרטי חשבון הבנק</h4>
-                    <p><strong>חשוב מאוד!</strong> פרטים אלו חייבים להיות מדויקים</p>
-                    <ul style="text-align: right;">
-                        <li><strong>שם הבנק:</strong> ___ (לדוגמה: בנק לאומי, בנק הפועלים)</li>
-                        <li><strong>מספר סניף:</strong> ___ (3 ספרות בד"כ)</li>
-                        <li><strong>מספר חשבון:</strong> ___ (5-7 ספרות)</li>
-                        <li><strong>שם החשבון:</strong> ___ (בדיוק כפי שרשום בבנק)</li>
-                    </ul>
-                    <p><strong>טיפ:</strong> אפשר לבקש מהבנק "פרטי העברה בנקאית" ולהעתיק מהמסמך שלהם</p>
+                    <h4>להשלמה: פרטי בנק</h4>
+                    <p>שם הבנק, מספר סניף, מספר חשבון, שם החשבון</p>
                 </div>
             </div>
         </div>
 
-        <div class="content-note" style="text-align: center; margin-top: 2rem;">
-            <h4>📝 מספר עמותה רשומה</h4>
-            <p><strong>חשוב!</strong> תורמים צריכים את המספר הזה לצורך הנחות מס</p>
-            <p>מספר העמותה הרשומה: ___</p>
-            <p>(מספר זה נמצא במסמכים מרשות התאגידים או מרשם העמותות)</p>
+        <div class="donate-note reveal">
+            <p>כל תרומה, קטנה או גדולה, משנה חיים של חייל</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section" id="contact">
+    <div class="section-inner">
+        <div class="section-header reveal">
+            <div class="section-label">יצירת קשר</div>
+            <h2 class="section-title">דברו איתנו</h2>
+            <p class="section-desc">לכל שאלה, פנייה או רצון להתנדב - אנחנו כאן</p>
         </div>
 
-        <div class="content-note" style="text-align: center; margin-top: 2rem; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);">
-            <h4 style="font-size: 1.5rem;">💚</h4>
-            <h4>📝 משפט תודה לתורם</h4>
-            <p><strong>מה לכתוב:</strong> משפט קצר שמראה מה התרומה משיגה</p>
-            <p><strong>דוגמאות:</strong></p>
-            <ul style="text-align: right; display: inline-block;">
-                <li>"בזכותך, עוד חייל מרגיש שיש מי שדואג לו"</li>
-                <li>"התרומה שלך נותנת תקווה לחייל שזקוק לה"</li>
-                <li>"כל תרומה, קטנה או גדולה, משנה חיים של חייל"</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact">
-        <h2 class="section-title">יצירת קשר והצטרפות</h2>
-
-        <div class="story-section">
-            <h3>דברו איתנו</h3>
-
-            <div class="content-note">
-                <h4>📝 איש/אשת קשר ראשי</h4>
-
-                <p><strong>פרטים:</strong></p>
-                <ul>
-                    <li><strong>שם מלא:</strong> ___ (לדוגמה: יוסי כהן)</li>
-                    <li><strong>תפקיד:</strong> ___ (לדוגמה: מנכ"ל העמותה, מייסד, רכז פעילות)</li>
-                    <li><strong>משפט קצר:</strong> ___ (לדוגמה: "יוסי הקים את העמותה אחרי ששירת כקצין ורצה להחזיר")</li>
-                </ul>
-
-                <p><strong>תמונה (אופציונלי):</strong></p>
-                <ul>
-                    <li>תמונה של איש הקשר</li>
-                    <li>או תמונה של צוות העמותה</li>
-                    <li>משהו שמראה פנים ומייצר אמון</li>
-                </ul>
-
-                <p><strong>טיפ:</strong> אנשים אוהבים לדעת עם מי הם מדברים - זה יוצר חיבור</p>
-            </div>
-        </div>
-
-        <h3 class="section-title" style="font-size: 1.5rem;">דרכי קשר</h3>
-
-        <div class="contact-grid">
-            <div class="contact-item">
-                <div class="contact-icon">📱</div>
-                <div class="content-note" style="flex: 1; margin: 0;">
-                    <p style="margin: 0;"><strong>📝 טלפון:</strong> ___ (לדוגמה: 050-1234567)</p>
-                    <p style="margin: 0; font-size: 0.85rem;">זמני מענה: ___ (לדוגמה: 8:00-20:00)</p>
-                </div>
-            </div>
-
-            <div class="contact-item">
-                <div class="contact-icon">💬</div>
-                <div class="content-note" style="flex: 1; margin: 0;">
-                    <p style="margin: 0;"><strong>📝 וואטסאפ:</strong> ___ (אותו מספר או שונה?)</p>
-                    <p style="margin: 0; font-size: 0.85rem;">תגובה תוך: ___ (לדוגמה: עד יום עסקים אחד)</p>
-                </div>
-            </div>
-
-            <div class="contact-item">
-                <div class="contact-icon">📧</div>
-                <div class="content-note" style="flex: 1; margin: 0;">
-                    <p style="margin: 0;"><strong>📝 מייל:</strong> ___</p>
-                    <p style="margin: 0; font-size: 0.85rem;">(לדוגמה: info@ganfreedom.org)</p>
-                </div>
-            </div>
-
-            <div class="contact-item">
-                <div class="contact-icon">📘</div>
-                <div>
+        <div class="contact-grid reveal">
+            <a href="https://www.facebook.com/profile.php?id=61575677264410" target="_blank" rel="noopener" class="contact-card">
+                <div class="contact-card-icon">&#128218;</div>
+                <div class="contact-card-text">
                     <strong>פייסבוק</strong>
-                    <p style="margin: 0.5rem 0 0;">
-                        <a href="https://www.facebook.com/profile.php?id=61575677264410" target="_blank" style="color: var(--primary);">
-                            עמוד הפייסבוק שלנו
-                        </a>
-                    </p>
+                    <span>עמוד הפייסבוק שלנו</span>
+                </div>
+            </a>
+            <div class="contact-card">
+                <div class="contact-card-icon">&#128222;</div>
+                <div class="contact-card-text">
+                    <strong>טלפון</strong>
+                    <span>להשלמה</span>
                 </div>
             </div>
-
-            <div class="contact-item">
-                <div class="contact-icon">📸</div>
-                <div class="content-note" style="flex: 1; margin: 0;">
-                    <p style="margin: 0;"><strong>📝 אינסטגרם (אם יש):</strong> ___</p>
-                    <p style="margin: 0; font-size: 0.85rem;">שם משתמש: @___</p>
+            <div class="contact-card">
+                <div class="contact-card-icon">&#128172;</div>
+                <div class="contact-card-text">
+                    <strong>וואטסאפ</strong>
+                    <span>להשלמה</span>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon">&#128231;</div>
+                <div class="contact-card-text">
+                    <strong>מייל</strong>
+                    <span>להשלמה</span>
                 </div>
             </div>
         </div>
 
-        <div class="story-section">
-            <h3>מה קורה אחרי פנייה?</h3>
-
-            <div class="content-note">
-                <h4>📝 תיאור תהליך הפנייה</h4>
-
-                <p><strong>שאלות שיעזרו:</strong></p>
-                <ul>
-                    <li><strong>כמה זמן לוקח עד תגובה?</strong> (לדוגמה: בתוך יום עסקים אחד, תוך 24 שעות)</li>
-                    <li><strong>איך חוזרים?</strong> טלפון? וואטסאפ? מייל?</li>
-                    <li><strong>מה שואלים?</strong> אילו פרטים צריך להכין מראש?</li>
-                    <li><strong>איזה מידע צריך למסור?</strong> מה עוזר לכם להבין את המצב?</li>
-                    <li><strong>מה הצעד הבא?</strong> פגישה? שיחה נוספת? מילוי טפסים?</li>
-                </ul>
-
-                <p><strong>דוגמה למה שאפשר לכתוב:</strong></p>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 1rem; border-radius: 6px;">
-                    "אנחנו חוזרים בתוך 24 שעות, בדרך כלל בטלפון או וואטסאפ. נשאל כמה שאלות בסיסיות כדי להבין את המצב, ונקבע שיחה או פגישה. התהליך לוקח בממוצע שבוע מהפנייה ועד לקבלת עזרה."
-                </p>
-            </div>
+        <div class="content-note reveal" style="margin-top: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+            <h4>להשלמה: פרטי קשר מלאים</h4>
+            <p>טלפון, וואטסאפ, מייל, שם איש/אשת קשר ותפקיד</p>
         </div>
+    </div>
+</section>
 
-        <div class="story-section">
-            <h3>חיילים ומשפחות - איך לפנות לעזרה?</h3>
-
-            <div class="content-note">
-                <h4>📝 הסבר לפניות חיילים/משפחות</h4>
-
-                <p><strong>שאלות:</strong></p>
-                <ul>
-                    <li><strong>מי יכול לפנות?</strong> רק החייל? גם משפחה? מפקד? חבר?</li>
-                    <li><strong>האם יש תנאים?</strong> צריך להיות בתהליך מסוים? צריך מסמכים?</li>
-                    <li><strong>מה צריך לכתוב בפנייה?</strong> אילו פרטים חשובים?</li>
-                    <li><strong>איש קשר ייעודי?</strong> יש מישהו שעוסק רק בפניות מהשטח?</li>
-                    <li><strong>סודיות?</strong> האם מידע נשמר חסוי?</li>
-                </ul>
-
-                <p><strong>דוגמה:</strong></p>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 1rem; border-radius: 6px;">
-                    "כל חייל, משפחה או מפקד יכולים לפנות אלינו בכל שעה. אנחנו שומרים על פרטיות מלאה. במסר ראשון, כתבו בקצרה את המצב ומספר טלפון ליצירת קשר. נחזור אליכם בהקדם."
-                </p>
-            </div>
+<!-- ============ CTA BANNER ============ -->
+<section class="section" style="background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light)); text-align: center; padding: 4rem 2rem;">
+    <div class="section-inner reveal">
+        <h2 style="font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3vw, 2.2rem); color: white; margin-bottom: 1rem;">
+            רוצים להתנדב? לתרום? לעזור?
+        </h2>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            כל עזרה משנה. פנו אלינו ונמצא את הדרך הנכונה ביחד.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="#donate" class="btn btn-primary" style="background: var(--color-accent); box-shadow: 0 4px 20px rgba(232,168,56,0.3);">לתרומה</a>
+            <a href="https://www.facebook.com/profile.php?id=61575677264410" target="_blank" rel="noopener" class="btn btn-outline">דברו איתנו בפייסבוק</a>
         </div>
+    </div>
+</section>
 
-        <div class="story-section">
-            <h3>רוצים להתנדב?</h3>
-
-            <div class="content-note">
-                <h4>📝 מתנדבים</h4>
-
-                <p><strong>שאלות:</strong></p>
-                <ul>
-                    <li><strong>פתוחים למתנדבים?</strong> כן/לא/תלוי בתחום</li>
-                    <li><strong>באילו תחומים צריכים עזרה?</strong> (לדוגמה: ארגון אירועים, שיפוצים, ליווי חיילים, גיוס כספים, דיגיטל/עיצוב, וכו')</li>
-                    <li><strong>כמה זמן בשבוע?</strong> מינימום? מקסימום?</li>
-                    <li><strong>איפה?</strong> מרחוק? צריך להגיע פיזית?</li>
-                    <li><strong>מה התהליך?</strong> איך מצטרפים? יש הכשרה?</li>
-                </ul>
-
-                <p><strong>דוגמה:</strong></p>
-                <p style="font-style: italic; background: rgba(255,255,255,0.6); padding: 1rem; border-radius: 6px;">
-                    "תמיד שמחים למתנדבים! צריכים עזרה בארגון אירועי פינוק, שיפוצים, וגיוס כספים. גם אם יש לכם רק שעתיים בשבוע - יש לנו איפה להשתמש בזה. כתבו לנו מה התחום שמעניין אתכם ונתאם."
-                </p>
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="logo-link" style="margin-bottom: 0.5rem;">
+                <img src="logo/logo.jpg" alt="G.A.N. FREEDOM" class="logo-img">
+                <span class="logo-text">G.A.N. FREEDOM</span>
             </div>
+            <p>עמותה למען חיילים פצועים ובודדים. פועלים מהלב כדי שאף חייל לא ירגיש לבד.</p>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <div class="logo-container" style="margin-bottom: 1rem;">
-                    <div class="logo">
-                        <img src="logo/logo.jpg" alt="G.A.N. FREEDOM" style="filter: brightness(0) invert(1);">
-                    </div>
-                    <div class="brand-name">G.A.N. FREEDOM</div>
-                </div>
-                <p style="color: rgba(255,255,255,0.8);">עמותה למען חיילים פצועים ובודדים</p>
-            </div>
-
-            <div>
-                <h4>קישורים</h4>
-                <p><a href="#home">בית</a></p>
-                <p><a href="#activities">מה אנחנו עושים</a></p>
-                <p><a href="#stories">סיפורים</a></p>
-                <p><a href="#donate">תרומה</a></p>
-                <p><a href="#contact">צור קשר</a></p>
-            </div>
-
-            <div>
-                <h4>צור קשר</h4>
-                <div class="content-note" style="background: rgba(254, 243, 199, 0.2); border-color: rgba(245, 158, 11, 0.3); padding: 0.5rem;">
-                    <p style="font-size: 0.85rem; margin: 0.25rem 0;">📝 טלפון: ___</p>
-                    <p style="font-size: 0.85rem; margin: 0.25rem 0;">📝 מייל: ___</p>
-                </div>
-                <p style="margin-top: 0.5rem;">
-                    <a href="https://www.facebook.com/profile.php?id=61575677264410" target="_blank">
-                        פייסבוק
-                    </a>
-                </p>
-            </div>
+        <div class="footer-col">
+            <h4>ניווט</h4>
+            <a href="#home">בית</a>
+            <a href="#about">מי אנחנו</a>
+            <a href="#activities">פעילויות</a>
+            <a href="#donate">תרומה</a>
+            <a href="#contact">צור קשר</a>
         </div>
-
-        <div class="footer-bottom">
-            <p>© G.A.N. FREEDOM | כל הזכויות שמורות</p>
-            <p style="margin-top: 0.5rem; font-size: 0.9rem;">עמותה רשומה מספר: [להשלים]</p>
+        <div class="footer-col">
+            <h4>עקבו אחרינו</h4>
+            <a href="https://www.facebook.com/profile.php?id=61575677264410" target="_blank" rel="noopener">פייסבוק</a>
         </div>
-    </footer>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; G.A.N. FREEDOM | כל הזכויות שמורות</p>
+    </div>
+</footer>
 
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="סגור">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="הקודם">&#10095;</button>
+    <button class="lightbox-nav lightbox-next" aria-label="הבא">&#10094;</button>
+    <img src="" alt="" id="lightboxImg">
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+(function() {
+    'use strict';
+
+    // ---- Scroll Progress Bar ----
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+        const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        scrollProgress.style.width = Math.min(pct, 100) + '%';
+    }
+
+    // ---- Header scroll state ----
+    const header = document.getElementById('siteHeader');
+    function updateHeader() {
+        header.classList.toggle('scrolled', window.scrollY > 50);
+    }
+
+    window.addEventListener('scroll', function() {
+        updateScrollProgress();
+        updateHeader();
+    }, { passive: true });
+
+    // ---- Mobile menu ----
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    mobileBtn.addEventListener('click', function() {
+        navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+            navLinks.classList.remove('open');
+        });
+    });
+
+    // ---- Smooth scroll ----
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            var target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                var offset = header.offsetHeight + 10;
+                var pos = target.getBoundingClientRect().top + window.scrollY - offset;
+                window.scrollTo({ top: pos, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // ---- Scroll Reveal ----
+    var revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el) {
+        revealObserver.observe(el);
+    });
+
+    // ---- Carousel System ----
+    function initCarousel(containerId) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        var track = container.querySelector('.carousel-track');
+        var slides = container.querySelectorAll('.carousel-slide');
+        var prevBtn = container.querySelector('.carousel-prev');
+        var nextBtn = container.querySelector('.carousel-next');
+        var dotsContainer = container.querySelector('.carousel-dots');
+        var counterCurrent = container.querySelector('.carousel-current');
+        var counterTotal = container.querySelector('.carousel-total');
+        var currentIndex = 0;
+        var total = slides.length;
+        var isDragging = false;
+        var startX = 0;
+        var currentTranslate = 0;
+
+        if (counterTotal) counterTotal.textContent = total;
+
+        // Create dots
+        for (var i = 0; i < total; i++) {
+            var dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', 'slide ' + (i + 1));
+            dot.dataset.index = i;
+            dot.addEventListener('click', function() {
+                goTo(parseInt(this.dataset.index));
+            });
+            dotsContainer.appendChild(dot);
+        }
+
+        function goTo(index) {
+            if (index < 0) index = total - 1;
+            if (index >= total) index = 0;
+            currentIndex = index;
+            // RTL: use positive translateX
+            track.style.transform = 'translateX(' + (currentIndex * 100) + '%)';
+            if (counterCurrent) counterCurrent.textContent = currentIndex + 1;
+            var dots = dotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach(function(d, di) {
+                d.classList.toggle('active', di === currentIndex);
+            });
+        }
+
+        prevBtn.addEventListener('click', function() { goTo(currentIndex - 1); });
+        nextBtn.addEventListener('click', function() { goTo(currentIndex + 1); });
+
+        // Touch/drag support
+        track.addEventListener('touchstart', function(e) {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+        }, { passive: true });
+
+        track.addEventListener('touchmove', function(e) {
+            if (!isDragging) return;
+            var diff = e.touches[0].clientX - startX;
+            currentTranslate = diff;
+        }, { passive: true });
+
+        track.addEventListener('touchend', function() {
+            isDragging = false;
+            if (currentTranslate > 50) goTo(currentIndex - 1);
+            else if (currentTranslate < -50) goTo(currentIndex + 1);
+            currentTranslate = 0;
+        });
+
+        // Auto-play
+        var autoplayInterval = setInterval(function() {
+            goTo(currentIndex + 1);
+        }, 5000);
+
+        container.addEventListener('mouseenter', function() { clearInterval(autoplayInterval); });
+        container.addEventListener('mouseleave', function() {
+            autoplayInterval = setInterval(function() { goTo(currentIndex + 1); }, 5000);
+        });
+
+        // Keyboard
+        container.setAttribute('tabindex', '0');
+        container.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') goTo(currentIndex - 1); // RTL
+            if (e.key === 'ArrowLeft') goTo(currentIndex + 1);
+        });
+    }
+
+    initCarousel('carousel-building');
+    initCarousel('carousel-treats');
+
+    // ---- Lightbox for Gallery Grid ----
+    var lightbox = document.getElementById('lightbox');
+    var lightboxImg = document.getElementById('lightboxImg');
+    var lightboxCounter = document.getElementById('lightboxCounter');
+    var lightboxImages = [];
+    var lightboxIndex = 0;
+
+    function openLightbox(images, index) {
+        lightboxImages = images;
+        lightboxIndex = index;
+        lightboxImg.src = images[index];
+        lightboxCounter.textContent = (index + 1) + ' / ' + images.length;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function lightboxGo(dir) {
+        lightboxIndex += dir;
+        if (lightboxIndex < 0) lightboxIndex = lightboxImages.length - 1;
+        if (lightboxIndex >= lightboxImages.length) lightboxIndex = 0;
+        lightboxImg.src = lightboxImages[lightboxIndex];
+        lightboxCounter.textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length;
+    }
+
+    lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    lightbox.querySelector('.lightbox-prev').addEventListener('click', function() { lightboxGo(-1); });
+    lightbox.querySelector('.lightbox-next').addEventListener('click', function() { lightboxGo(1); });
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') lightboxGo(-1); // RTL
+        if (e.key === 'ArrowLeft') lightboxGo(1);
+    });
+
+    // Init gallery grids with lightbox
+    document.querySelectorAll('.gallery-grid').forEach(function(grid) {
+        var items = grid.querySelectorAll('.gallery-grid-item');
+        var images = [];
+        items.forEach(function(item) {
+            images.push(item.querySelector('img').src);
+        });
+        items.forEach(function(item, idx) {
+            item.addEventListener('click', function() {
+                openLightbox(images, idx);
             });
         });
-    </script>
+    });
+
+})();
+</script>
 </body>
 </html>
