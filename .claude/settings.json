@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "frontend-design": true,
+    "typescript-lsp": true,
+    "context7": true
+  }
+}
