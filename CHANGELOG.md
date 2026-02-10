@@ -1,5 +1,29 @@
 # Changelog - GAN Freedom
 
+## 2026-02-10
+
+### Content Rewrite - War Victims Focus
+- Rewrote entire website content: removed all soldier references (~50 mentions)
+- New narrative: victims of Swords of Iron war, Petah Tikva municipality partnership, donors, volunteers
+- Added "Partners & Thanks" section (municipality, donors, volunteers)
+- Created new food/donations carousel (20 images from soldiers-treats/)
+- Restructured 3 activity sections: Renovation, Food & Donations, Pampering
+
+### Image Fixes
+- Fixed 29 broken images (copied from Hebrew source folders to English folders)
+- Fixed carousel cropping: object-fit cover -> contain for portrait images
+- Increased carousel heights: 700px desktop, 500px tablet, 400px mobile
+- Removed 6 misplaced food/logistics images from renovation carousel
+- Replaced with 6 actual renovation photos (finished apartments, night work, etc.)
+
+### Legal Review
+- Analyzed website for legal compliance before publishing
+- Identified 7 issues: photos consent, privacy policy, accessibility, donation wording, municipality mention, copyright, nonprofit registration display
+- Drafted message to client with lawyer checklist and missing details list
+
+### Deployment
+- Re-enabled GitHub Pages, site live at stp-ai.github.io/gan-freedom
+
 ## 2026-02-07
 
 ### Website Built
