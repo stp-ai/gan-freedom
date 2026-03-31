@@ -7,7 +7,7 @@ Current focus: Building organization website.
 ## Domain Focus
 - Website development -> use code-explorer agent
 - Content and design -> use content-creator agent
-- Frontend UI -> use content-creator agent with frontend-design skill
+- Frontend UI -> use content-creator agent with content-frontend-design skill
 
 ## Languages
 - Primary: Hebrew (RTL)
